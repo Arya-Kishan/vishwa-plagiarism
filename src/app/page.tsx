@@ -25,403 +25,428 @@ import {
   Search,
   Filter,
   MoreHorizontal,
-  FileText,
-  Image,
-  Video,
-  File,
-  Edit,
-  Trash2,
-  Check,
-  Circle
+  Check
 } from 'lucide-react';
 
-const FranchiseDashboard: React.FC = () => {
-  const navItems = [
-    { icon: Home, label: 'Home', active: true },
-    { icon: CheckSquare, label: 'Stages & Checklist' },
-    { icon: Upload, label: 'Upload Docs' },
-    { icon: Users, label: 'Preferred Vendors' },
-    { icon: Layers, label: 'Tech Stack' },
-    { icon: Target, label: 'Targets' },
-    { icon: Target, label: 'Zee Sales Targets' },
-    { icon: Settings, label: 'MAI Settings' },
-    { icon: HelpCircle, label: 'Pending Questions', badge: 3 },
+// Main Dashboard Component
+const FranchiseDashboard = () => {
+  // Navigation menu items
+  const menuItems = [
+    { name: 'Home', icon: Home, active: true },
+    { name: 'Stages & Checklist', icon: CheckSquare },
+    { name: 'Upload Docs', icon: Upload },
+    { name: 'Preferred Vendors', icon: Users },
+    { name: 'Tech Stack', icon: Layers },
+    { name: 'Targets', icon: Target },
+    { name: 'Zee Sales Targets', icon: Target },
+    { name: 'MAI Settings', icon: Settings },
+    { name: 'Pending Questions', icon: HelpCircle, badge: '3' },
   ];
 
+  // Document data
   const documents = [
     {
-      id: '1',
+      id: 1,
       name: 'Tech requirements.pdf',
       size: '200 KB',
-      type: 'pdf',
+      type: 'PDF',
       category: 'Legal',
+      categoryColor: 'bg-blue-500',
       aiInclusion: true,
       dashboardInclusion: true,
       stageAccess: 'Full'
     },
     {
-      id: '2',
+      id: 2,
       name: 'Dashboard screenshot.jpg',
       size: '720 KB',
-      type: 'jpg',
+      type: 'PDF',
       category: 'Vendors & Assets',
+      categoryColor: 'bg-green-500',
       aiInclusion: true,
       dashboardInclusion: true,
       stageAccess: 'Onboarding'
     },
     {
-      id: '3',
+      id: 3,
       name: 'Dashboard prototype recording.mp4',
-      size: '18 MB',
-      type: 'mp4',
+      size: '16 MB',
+      type: 'DOC',
       category: 'Technology',
+      categoryColor: 'bg-orange-500',
       aiInclusion: false,
       dashboardInclusion: true,
       stageAccess: 'Franchisee'
     },
     {
-      id: '4',
+      id: 4,
       name: 'Financial Overview',
       size: '4.2 MB',
-      type: 'docx',
+      type: 'DOC',
       category: 'Financial',
+      categoryColor: 'bg-purple-500',
       aiInclusion: true,
       dashboardInclusion: true,
       stageAccess: 'Prospect'
     },
     {
-      id: '5',
+      id: 5,
       name: 'UX Design Guidelines.docx',
       size: '400 KB',
-      type: 'docx',
+      type: 'DOC',
       category: 'Legal',
+      categoryColor: 'bg-blue-500',
       aiInclusion: true,
       dashboardInclusion: false,
       stageAccess: 'Onboarding'
     },
     {
-      id: '6',
+      id: 6,
       name: 'Dashboard interaction.aep',
       size: '12 MB',
-      type: 'aep',
+      type: 'PDF',
       category: 'Legal',
+      categoryColor: 'bg-blue-500',
       aiInclusion: true,
       dashboardInclusion: true,
       stageAccess: 'Onboarding'
     },
     {
-      id: '7',
+      id: 7,
       name: 'Briefing call recording.mp3',
-      size: '18.8 MB',
-      type: 'mp3',
+      size: '18.6 MB',
+      type: 'PDF',
       category: 'Financial',
+      categoryColor: 'bg-purple-500',
       aiInclusion: false,
       dashboardInclusion: false,
       stageAccess: 'Prospect'
     }
   ];
 
-  const prospectLeads = [
-    { name: 'Wade Warren', stage: 'Initial Inquiry' },
-    { name: 'Ava Wright', stage: 'Initial Inquiry' },
-    { name: 'Cody Fisher', stage: 'Initial Inquiry' }
-  ];
+  // Progress circle component
+  const ProgressCircle = ({ percentage }:{percentage:any}) => {
+    const radius = 45;
+    const circumference = 2 * Math.PI * radius;
+    const strokeDasharray = circumference;
+    const strokeDashoffset = circumference - (percentage / 100) * circumference;
 
-  const getFileIcon = (type: string) => {
-    const iconClass = "h-4 w-4";
-    switch (type) {
-      case 'pdf': return <div className="bg-red-500 text-white p-1 rounded text-xs font-bold flex items-center justify-center w-8 h-8">PDF</div>;
-      case 'jpg': return <div className="bg-orange-500 text-white p-1 rounded text-xs font-bold flex items-center justify-center w-8 h-8">JPG</div>;
-      case 'mp4': return <div className="bg-blue-500 text-white p-1 rounded text-xs font-bold flex items-center justify-center w-8 h-8">MP4</div>;
-      case 'docx': return <div className="bg-blue-600 text-white p-1 rounded text-xs font-bold flex items-center justify-center w-8 h-8">DOC</div>;
-      case 'aep': return <div className="bg-purple-500 text-white p-1 rounded text-xs font-bold flex items-center justify-center w-8 h-8">AEP</div>;
-      case 'mp3': return <div className="bg-red-500 text-white p-1 rounded text-xs font-bold flex items-center justify-center w-8 h-8">MP3</div>;
-      default: return <File className={iconClass} />;
-    }
+    return (
+      <div className="relative w-32 h-32">
+        <svg className="w-32 h-32 transform -rotate-90" viewBox="0 0 100 100">
+          {/* Background circle */}
+          <circle
+            cx="50"
+            cy="50"
+            r={radius}
+            stroke="#e5e7eb"
+            strokeWidth="8"
+            fill="none"
+          />
+          {/* Progress circle */}
+          <circle
+            cx="50"
+            cy="50"
+            r={radius}
+            stroke="#3b82f6"
+            strokeWidth="8"
+            fill="none"
+            strokeDasharray={strokeDasharray}
+            strokeDashoffset={strokeDashoffset}
+            strokeLinecap="round"
+            className="transition-all duration-500 ease-out"
+          />
+        </svg>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <span className="text-2xl font-bold text-gray-900">{percentage}%</span>
+        </div>
+      </div>
+    );
   };
 
-  const getCategoryBadge = (category: string) => {
-    switch (category) {
-      case 'Legal': return <Badge className="bg-blue-500 hover:bg-blue-600 text-white text-xs">Legal</Badge>;
-      case 'Vendors & Assets': return <Badge className="bg-green-500 hover:bg-green-600 text-white text-xs">Vendors & Assets</Badge>;
-      case 'Technology': return <Badge className="bg-orange-500 hover:bg-orange-600 text-white text-xs">Technology</Badge>;
-      case 'Financial': return <Badge className="bg-purple-500 hover:bg-purple-600 text-white text-xs">Financial</Badge>;
-      default: return <Badge className="bg-gray-500 hover:bg-gray-600 text-white text-xs">{category}</Badge>;
-    }
+  // File type icon component
+  const FileTypeIcon = ({ type }:{type:any}) => {
+    const getFileColor = () => {
+      if (type === 'PDF') return 'bg-red-500';
+      if (type === 'DOC') return 'bg-blue-500';
+      return 'bg-gray-500';
+    };
+
+    return (
+      <div className={`${getFileColor()} text-white text-xs font-bold w-8 h-8 rounded flex items-center justify-center`}>
+        {type}
+      </div>
+    );
   };
 
   return (
-    <div className="flex h-screen bg-gray-100">
-      {/* Sidebar */}
-      <div className="hidden lg:flex lg:w-64 lg:flex-col bg-teal-700">
-        <div className="flex flex-col flex-1">
+    <div className="flex h-screen bg-gray-50">
+      {/* Sidebar Navigation */}
+      <div className="w-64 bg-teal-700 text-white">
+        <div className="p-4">
           {/* Logo */}
-          <div className="flex items-center h-16 px-4 bg-teal-800">
-            <div className="flex items-center">
-              <div className="w-8 h-8 bg-white rounded flex items-center justify-center mr-3">
-                <div className="text-teal-700 text-lg font-bold">⚡</div>
-              </div>
-              <span className="text-white font-semibold text-lg">FrameTech</span>
+          <div className="flex items-center mb-8">
+            <div className="w-8 h-8 bg-white rounded mr-3 flex items-center justify-center">
+              <span className="text-teal-700 font-bold">⚡</span>
             </div>
+            <span className="text-lg font-semibold">FrameTech</span>
           </div>
 
-          {/* Navigation */}
-          <nav className="flex-1 px-4 py-6 space-y-2">
-            {navItems.map((item, index) => {
+          {/* Navigation Menu */}
+          <nav className="space-y-2">
+            {menuItems.map((item, index) => {
               const Icon = item.icon;
               return (
                 <div
                   key={index}
-                  className={`group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg cursor-pointer transition-all duration-200 ${
-                    item.active
-                      ? 'bg-teal-600 text-white shadow-md'
-                      : 'text-teal-100 hover:bg-teal-600 hover:text-white'
+                  className={`flex items-center px-3 py-2 rounded-lg cursor-pointer transition-colors ${
+                    item.active 
+                      ? 'bg-teal-600 text-white' 
+                      : 'text-teal-100 hover:bg-teal-600'
                   }`}
                 >
-                  <Icon className="mr-3 h-5 w-5" />
-                  <span className="flex-1">{item.label}</span>
+                  <Icon className="w-5 h-5 mr-3" />
+                  <span className="flex-1 text-sm">{item.name}</span>
                   {item.badge && (
-                    <Badge className="ml-auto bg-white text-teal-700 text-xs">
+                    <span className="bg-white text-teal-700 text-xs px-2 py-1 rounded-full">
                       {item.badge}
-                    </Badge>
+                    </span>
                   )}
                 </div>
               );
             })}
           </nav>
+        </div>
 
-          {/* Logout */}
-          <div className="px-4 pb-4">
-            <div className="flex items-center px-3 py-2.5 text-sm font-medium text-teal-100 rounded-lg cursor-pointer hover:bg-teal-600 hover:text-white transition-all duration-200">
-              <LogOut className="mr-3 h-5 w-5" />
-              Logout
-            </div>
+        {/* Logout at bottom */}
+        <div className="absolute bottom-4 left-4 right-4">
+          <div className="flex items-center px-3 py-2 text-teal-100 hover:bg-teal-600 rounded-lg cursor-pointer transition-colors">
+            <LogOut className="w-5 h-5 mr-3" />
+            <span className="text-sm">Logout</span>
           </div>
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="flex flex-col flex-1 overflow-hidden">
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col">
         {/* Header */}
-        <header className="bg-white shadow-sm border-b">
-          <div className="flex items-center justify-between px-6 py-4">
+        <header className="bg-white border-b px-6 py-4">
+          <div className="flex items-center justify-between">
             <h1 className="text-2xl font-semibold text-gray-900">
               Financials & Targets
             </h1>
-            <div className="flex items-center space-x-4">
-              <Badge className="bg-red-500 hover:bg-red-600 text-white px-3 py-1">
+            <div className="flex items-center space-x-3">
+              <Badge className="bg-red-500 text-white px-3 py-1">
                 Adityaa Dey
               </Badge>
-              <Avatar className="h-9 w-9">
-                <AvatarFallback className="bg-gray-300">A</AvatarFallback>
+              <Avatar className="w-8 h-8">
+                <AvatarFallback>A</AvatarFallback>
               </Avatar>
             </div>
           </div>
         </header>
 
-        {/* Dashboard Content */}
-        <main className="flex-1 overflow-y-auto bg-gray-50 p-6">
-          <div className="max-w-7xl mx-auto space-y-6">
-            {/* Top Section with Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {/* Account Progress + Steps */}
-              <div className="space-y-6">
-                <Card className="bg-white">
-                  <CardHeader className="pb-4">
-                    <CardTitle className="text-sm font-medium text-gray-600">
-                      Account Progress
-                    </CardTitle>
+        {/* Main Dashboard Content */}
+        <main className="flex-1 p-6 overflow-auto">
+          <div className="max-w-7xl mx-auto">
+            {/* Top Cards Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+              
+              {/* Left Column - Account Progress */}
+              <div>
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-sm font-medium text-gray-600">Account Progress</CardTitle>
                   </CardHeader>
-                  <CardContent className="pt-0">
+                  <CardContent>
                     <div className="flex justify-center mb-6">
-                      <div className="relative">
-                        <svg className="w-32 h-32 transform -rotate-90" viewBox="0 0 120 120">
-                          <circle
-                            cx="60"
-                            cy="60"
-                            r="50"
-                            stroke="#e5e7eb"
-                            strokeWidth="10"
-                            fill="none"
-                          />
-                          <circle
-                            cx="60"
-                            cy="60"
-                            r="50"
-                            stroke="#0891b2"
-                            strokeWidth="10"
-                            fill="none"
-                            // strokeDasharray={${85 * 3.14}, 314}
-                            className="transition-all duration-500"
-                          />
-                        </svg>
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <span className="text-3xl font-bold text-gray-900">85%</span>
-                        </div>
+                      <ProgressCircle percentage={85} />
+                    </div>
+                    
+                    {/* Steps Completed Section */}
+                    <div className="bg-gray-100 rounded-lg p-4 mb-4">
+                      <h4 className="font-medium text-gray-900 mb-4">Steps Completed</h4>
+                      <div className="space-y-3">
+                        {[
+                          { name: 'Profile Setup', completed: true },
+                          { name: 'Initial Training', completed: true },
+                          { name: 'Legal Documents', completed: true }
+                        ].map((step, index) => (
+                          <div key={index} className="flex items-center">
+                            <div className="w-4 h-4 bg-gray-300 rounded-full flex items-center justify-center mr-3">
+                              <div className="w-2 h-2 bg-gray-500 rounded-full"></div>
+                            </div>
+                            <span className="text-sm text-gray-700">{step.name}</span>
+                            <div className="ml-auto w-5 h-5 bg-green-500 rounded-full flex items-center justify-center">
+                              <Check className="w-3 h-3 text-white" />
+                            </div>
+                          </div>
+                        ))}
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
-
-                <Card className="bg-white">
-                  <CardHeader className="pb-4">
-                    <CardTitle className="text-sm font-medium text-gray-600">
-                      Steps Completed
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="pt-0">
-                    <div className="space-y-4">
-                      {[
-                        { name: 'Profile Setup', completed: true },
-                        { name: 'Initial Training', completed: true },
-                        { name: 'Legal Documents', completed: true },
-                        { name: 'Financial Integration', completed: false },
-                        { name: 'Final Review', completed: false }
-                      ].map((step, index) => (
-                        <div key={index} className="flex items-center space-x-3">
-                          <div className={`w-4 h-4 rounded-full flex items-center justify-center ${
-                            step.completed ? 'bg-green-500' : 'bg-gray-300'
-                          }`}>
-                            {step.completed && <Check className="w-2.5 h-2.5 text-white" />}
+                      
+                    {/* Steps Remaining Section */}
+                    <div className="bg-gray-100 rounded-lg p-4">
+                      <h4 className="font-medium text-gray-900 mb-4">Steps Remaining</h4>
+                      <div className="space-y-3">
+                        {[
+                          { name: 'Financial Integration' },
+                          { name: 'Final Review' }
+                        ].map((step, index) => (
+                          <div key={index} className="flex items-center">
+                            <div className="w-4 h-4 bg-gray-300 rounded-full mr-3">
+                              <div className="w-2 h-2 bg-gray-500 rounded-full ml-1 mt-1"></div>
+                            </div>
+                            <span className="text-sm text-gray-700">{step.name}</span>
+                            <div className="ml-auto w-5 h-5 bg-gray-300 rounded-full"></div>
                           </div>
-                          <span className="text-sm text-gray-700">{step.name}</span>
-                        </div>
-                      ))}
+                        ))}
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
               </div>
 
-              {/* Total Franchisees + Financial Wellbeing */}
+              {/* Center Column - Franchisees & Financial */}
               <div className="space-y-6">
-                <Card className="bg-white">
-                  <CardHeader className="pb-4">
-                    <CardTitle className="text-sm font-medium text-gray-600">
-                      Total Franchisees Onboard
-                    </CardTitle>
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-sm font-medium text-gray-600">Total Franchisees Onboard</CardTitle>
                   </CardHeader>
-                  <CardContent className="pt-0">
-                    <div className="flex items-center mb-4">
-                      <span className="text-3xl font-bold text-gray-900">14</span>
-                      <Badge className="ml-3 bg-green-100 text-green-700 border-green-200">
-                        ↗ 7.4%
-                      </Badge>
-                    </div>
-                    <div className="flex items-center space-x-1 mb-6">
-                      {[1, 2, 3, 4, 5].map((i) => (
-                        <Avatar key={i} className="h-6 w-6 border border-white">
-                          <AvatarFallback className="text-xs bg-gray-200">U</AvatarFallback>
-                        </Avatar>
-                      ))}
-                      <span className="text-xs text-gray-500 ml-2">+7</span>
-                    </div>
-                    <div className="mb-4">
-                      <div className="flex space-x-1 mb-2">
-                        <div className="h-2 bg-blue-500 rounded" style={{width: '20%'}}></div>
-                        <div className="h-2 bg-blue-400 rounded" style={{width: '50%'}}></div>
-                        <div className="h-2 bg-blue-300 rounded" style={{width: '30%'}}></div>
+                  <CardContent>
+                    <div className="flex items-center justify-between mb-6">
+                      <div className="flex items-center">
+                        <span className="text-4xl font-bold text-gray-900 mr-4">14</span>
+                        <Badge className="bg-green-100 text-green-700 border-green-300 text-sm px-2 py-1">
+                          ↗ 7.4%
+                        </Badge>
+                      </div>
+                      <div className="flex items-center">
+                        {[1, 2, 3, 4, 5].map((i) => (
+                          <Avatar key={i} className="w-7 h-7 border-2 border-white -ml-1 first:ml-0">
+                            <AvatarFallback className="text-xs bg-blue-100 text-blue-700">
+                              {String.fromCharCode(64 + i)}
+                            </AvatarFallback>
+                          </Avatar>
+                        ))}
+                        <span className="ml-3 text-sm text-gray-600 font-medium">+7</span>
                       </div>
                     </div>
-                    <div className="space-y-2 text-sm">
+
+                    {/* Progress Bars */}
+                    <div className="mb-6">
+                      <div className="flex h-3 bg-gray-200 rounded-full overflow-hidden gap-1">
+                        <div className="bg-blue-700 flex-1 rounded-full"></div>
+                        <div className="bg-blue-500 flex-[2.5] rounded-full"></div>
+                        <div className="bg-blue-300 flex-[1.5] rounded-full"></div>
+                      </div>
+                    </div>
+
+                    {/* Stage Details */}
+                    <div className="space-y-3">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center">
-                          <div className="w-3 h-3 bg-blue-500 rounded-full mr-2"></div>
-                          <span className="text-gray-600">Stage 1 (Initial Inquiry)</span>
+                          <div className="w-3 h-3 bg-blue-700 rounded-full mr-3"></div>
+                          <span className="text-sm text-gray-700">Stage 1 (Initial Inquiry)</span>
                         </div>
-                        <span className="font-semibold">02</span>
+                        <span className="text-lg font-bold text-gray-900">02</span>
                       </div>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center">
-                          <div className="w-3 h-3 bg-blue-400 rounded-full mr-2"></div>
-                          <span className="text-gray-600">Stage 2 (Document Submission)</span>
+                          <div className="w-3 h-3 bg-blue-500 rounded-full mr-3"></div>
+                          <span className="text-sm text-gray-700">Stage 2 (Document Submission)</span>
                         </div>
-                        <span className="font-semibold">07</span>
+                        <span className="text-lg font-bold text-gray-900">07</span>
                       </div>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center">
-                          <div className="w-3 h-3 bg-blue-300 rounded-full mr-2"></div>
-                          <span className="text-gray-600">Stage 3 (IT Training)</span>
+                          <div className="w-3 h-3 bg-blue-300 rounded-full mr-3"></div>
+                          <span className="text-sm text-gray-700">Stage 3 (IT Training)</span>
                         </div>
-                        <span className="font-semibold">05</span>
+                        <span className="text-lg font-bold text-gray-900">05</span>
                       </div>
                     </div>
                   </CardContent>
                 </Card>
 
-                <Card className="bg-white">
-                  <CardHeader className="pb-4">
-                    <CardTitle className="text-sm font-medium text-gray-600">
-                      Financial Wellbeing
-                    </CardTitle>
+                {/* Financial Wellbeing Card */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-sm text-gray-600">Financial Wellbeing</CardTitle>
                   </CardHeader>
-                  <CardContent className="pt-0">
+                  <CardContent>
                     <div className="flex items-center mb-4">
                       <span className="text-3xl font-bold text-gray-900">20</span>
-                      <Badge className="ml-3 bg-green-100 text-green-700 border-green-200">
+                      <Badge className="ml-3 bg-green-50 text-green-700 border border-green-200">
                         ↗ 2.1%
                       </Badge>
                     </div>
-                    <div className="text-sm text-gray-600 mb-4">Total Franchisees</div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <div className="text-sm text-gray-600">Target</div>
-                        <div className="text-xl font-bold text-gray-900">$500,000</div>
-                      </div>
-                      <div>
-                        <div className="text-sm text-gray-600">Current</div>
-                        <div className="text-xl font-bold text-gray-900">$450,000</div>
+                    <p className="text-sm text-gray-600 mb-4">Total Franchisees</p>
+                    
+                    {/* Target vs Current */}
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="text-center">
+                          <p className="text-sm text-gray-600">Target</p>
+                          <p className="text-xl font-bold text-gray-900">$500,000</p>
+                        </div>
+                        <div className="text-center">
+                          <p className="text-sm text-gray-600">Current</p>
+                          <p className="text-xl font-bold text-gray-900">$450,000</p>
+                        </div>
                       </div>
                     </div>
                   </CardContent>
                 </Card>
               </div>
 
-              {/* Key Insights + Prospect Leads */}
-              <div className="space-y-6">
-                <Card className="bg-white">
-                  <CardHeader className="pb-4">
-                    <CardTitle className="text-sm font-medium text-gray-600">
-                      Key Insights & Feedback
-                    </CardTitle>
+              {/* Right Column - Key Insights & Prospect Leads */}
+              <div>
+                <Card className="mb-6">
+                  <CardHeader>
+                    <CardTitle className="text-sm text-gray-600">Key Insights & Feedback</CardTitle>
                   </CardHeader>
-                  <CardContent className="pt-0">
+                  <CardContent>
                     <div className="flex items-center justify-between mb-4">
                       <span className="text-3xl font-bold text-gray-900">10%</span>
                       <div className="flex items-center">
-                        <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-2">
-                          <div className="w-4 h-4 bg-blue-500 rounded-full"></div>
+                        <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center mr-2">
+                          <div className="w-6 h-6 border-2 border-gray-400 rounded-full border-dashed"></div>
                         </div>
-                        <Badge className="bg-blue-100 text-blue-700 border-blue-200">
-                          Top Performer
-                        </Badge>
+                        <Badge className="bg-blue-100 text-blue-700">Top Performer</Badge>
                       </div>
                     </div>
-                    <div className="text-sm text-gray-600 mb-4">Sales Growth</div>
-                    <div className="text-sm">
-                      <div className="font-medium text-gray-700 mb-2">Feedback</div>
-                      <div className="text-gray-600">
+                    <p className="text-sm text-gray-600 mb-4">Sales Growth</p>
+                    
+                    {/* Feedback Section */}
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                      <h4 className="font-medium text-gray-900 mb-2">Feedback</h4>
+                      <p className="text-sm text-gray-700">
                         • Franchisees are requesting more detailed training materials.
-                      </div>
+                      </p>
                     </div>
                   </CardContent>
                 </Card>
 
-                <Card className="bg-white">
-                  <CardHeader className="pb-4">
-                    <CardTitle className="text-sm font-medium text-gray-600">
-                      Prospect Leads
-                    </CardTitle>
+                {/* Prospect Leads Card */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-sm text-gray-600">Prospect Leads</CardTitle>
                   </CardHeader>
-                  <CardContent className="pt-0">
-                    <div className="space-y-4">
-                      {prospectLeads.map((lead, index) => (
-                        <div key={index} className="flex items-center space-x-3">
-                          <Avatar className="h-8 w-8">
-                            <AvatarFallback className="bg-gray-200 text-xs">
+                  <CardContent>
+                    <div className="space-y-3">
+                      {[
+                        { name: 'Wade Warren', stage: 'Initial Inquiry' },
+                        { name: 'Ava Wright', stage: 'Initial Inquiry' },
+                        { name: 'Cody Fisher', stage: 'Initial Inquiry' }
+                      ].map((lead, index) => (
+                        <div key={index} className="flex items-center space-x-3 p-2 bg-gray-50 rounded-lg">
+                          <Avatar className="w-8 h-8">
+                            <AvatarFallback className="bg-blue-100 text-blue-700 text-xs">
                               {lead.name.split(' ').map(n => n[0]).join('')}
                             </AvatarFallback>
                           </Avatar>
-                          <div className="flex-1">
+                          <div>
                             <p className="text-sm font-medium text-gray-900">{lead.name}</p>
                             <p className="text-xs text-gray-500">Stage: {lead.stage}</p>
                           </div>
@@ -433,115 +458,113 @@ const FranchiseDashboard: React.FC = () => {
               </div>
             </div>
 
-            {/* My Uploads Section with Pink Border */}
-            <div className="border-4 border-pink-400 rounded-lg bg-white p-6">
-              <div className="flex items-center justify-between mb-2">
-                <h2 className="text-xl font-semibold text-gray-900">My Uploads</h2>
-                <Button variant="ghost" size="sm">
-                  <MoreHorizontal className="h-4 w-4" />
-                </Button>
-              </div>
-              <p className="text-sm text-gray-600 mb-6">
-                Documents that are uploaded by you.
-              </p>
-
-              {/* Search and Filter */}
-              <div className="flex items-center space-x-4 mb-6">
-                <div className="relative flex-1 max-w-md">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                  <Input
-                    placeholder="Search here..."
-                    className="pl-9"
-                  />
+            {/* My Uploads Section - Simple card with no pink border */}
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between mb-2">
+                  <h2 className="text-xl font-semibold text-gray-900">My Uploads</h2>
+                  <Button variant="ghost" size="sm">
+                    <MoreHorizontal className="w-4 h-4" />
+                  </Button>
                 </div>
-                <Button variant="outline" className="flex items-center">
-                  <Filter className="mr-2 h-4 w-4" />
-                  Filters
-                </Button>
-              </div>
+                <p className="text-sm text-gray-600 mb-6">Documents that are uploaded by you.</p>
 
-              {/* Documents Table */}
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b border-gray-200 text-left">
-                      <th className="pb-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Document Name</th>
-                      <th className="pb-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Document Type</th>
-                      <th className="pb-3 text-xs font-medium text-gray-500 uppercase tracking-wider">AI App Inclusion</th>
-                      <th className="pb-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Dashboard Inclusion</th>
-                      <th className="pb-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Stage Access</th>
-                      <th className="pb-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="space-y-2">
-                    {documents.map((doc, index) => (
-                      <tr key={doc.id} className="border-b border-gray-100">
-                        <td className="py-4">
-                          <div className="flex items-center space-x-3">
-                            {getFileIcon(doc.type)}
-                            <div>
-                              <p className="text-sm font-medium text-gray-900">{doc.name}</p>
-                              <p className="text-xs text-gray-500">{doc.size}</p>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="py-4">
-                          {getCategoryBadge(doc.category)}
-                        </td>
-                        <td className="py-4">
-                          <Switch
-                            checked={doc.aiInclusion}
-                            className="data-[state=checked]:bg-blue-500"
-                          />
-                        </td>
-                        <td className="py-4">
-                          <Switch
-                            checked={doc.dashboardInclusion}
-                            className="data-[state=checked]:bg-blue-500"
-                          />
-                        </td>
-                        <td className="py-4">
-                          <Select defaultValue={doc.stageAccess.toLowerCase()}>
-                            <SelectTrigger className="w-32">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="full">Full</SelectItem>
-                              <SelectItem value="onboarding">Onboarding</SelectItem>
-                              <SelectItem value="franchisee">Franchisee</SelectItem>
-                              <SelectItem value="prospect">Prospect</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </td>
-                        <td className="py-4">
-                          <div className="flex items-center space-x-2">
-                            <Button variant="outline" size="sm" className="text-red-500 hover:text-red-700">
-                              Delete
-                            </Button>
-                            <Button variant="outline" size="sm" className="text-blue-500 hover:text-blue-700">
-                              Edit
-                            </Button>
-                          </div>
-                        </td>
+                {/* Search and Filters */}
+                <div className="flex items-center space-x-4 mb-6">
+                  <div className="relative flex-1 max-w-sm">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                    <Input placeholder="Search here..." className="pl-9" />
+                  </div>
+                  <Button variant="outline">
+                    <Filter className="w-4 h-4 mr-2" />
+                    Filters
+                  </Button>
+                </div>
+
+                {/* Documents Table */}
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b">
+                        <th className="text-left py-3 text-xs font-medium text-gray-500 uppercase w-8">
+                          {/* Checkbox column */}
+                        </th>
+                        <th className="text-left py-3 text-xs font-medium text-gray-500 uppercase">
+                          Document Name
+                        </th>
+                        <th className="text-left py-3 text-xs font-medium text-gray-500 uppercase">
+                          Document Type
+                        </th>
+                        <th className="text-left py-3 text-xs font-medium text-gray-500 uppercase">
+                          AI App Inclusion
+                        </th>
+                        <th className="text-left py-3 text-xs font-medium text-gray-500 uppercase">
+                          Dashboard Inclusion
+                        </th>
+                        <th className="text-left py-3 text-xs font-medium text-gray-500 uppercase">
+                          Stage Access
+                        </th>
+                        <th className="text-left py-3 text-xs font-medium text-gray-500 uppercase">
+                          Actions
+                        </th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            {/* Bryan Hoda Profile Card */}
-            <div className="absolute top-80 left-80 bg-white rounded-lg shadow-lg p-4 border border-gray-200 z-10">
-              <div className="flex items-center space-x-3">
-                <Avatar className="h-10 w-10">
-                  <AvatarFallback className="bg-gray-200">BH</AvatarFallback>
-                </Avatar>
-                <div>
-                  <p className="font-semibold text-gray-900">Bryan Hoda</p>
-                  <p className="text-sm text-gray-500">Key Performing</p>
+                    </thead>
+                    <tbody>
+                      {documents.map((doc) => (
+                        <tr key={doc.id} className="border-b hover:bg-gray-50">
+                          <td className="py-4">
+                            <input type="checkbox" className="w-4 h-4 text-blue-600 rounded border-gray-300" />
+                          </td>
+                          <td className="py-4">
+                            <div className="flex items-center space-x-3">
+                              <FileTypeIcon type={doc.type} />
+                              <div>
+                                <p className="text-sm font-medium text-gray-900">{doc.name}</p>
+                                <p className="text-xs text-gray-500">{doc.size}</p>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="py-4">
+                            <Badge className={`${doc.categoryColor} text-white text-xs`}>
+                              {doc.category}
+                            </Badge>
+                          </td>
+                          <td className="py-4">
+                            <Switch checked={doc.aiInclusion} />
+                          </td>
+                          <td className="py-4">
+                            <Switch checked={doc.dashboardInclusion} />
+                          </td>
+                          <td className="py-4">
+                            <Select defaultValue={doc.stageAccess.toLowerCase()}>
+                              <SelectTrigger className="w-32">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="full">Full</SelectItem>
+                                <SelectItem value="onboarding">Onboarding</SelectItem>
+                                <SelectItem value="franchisee">Franchisee</SelectItem>
+                                <SelectItem value="prospect">Prospect</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </td>
+                          <td className="py-4">
+                            <div className="flex space-x-2">
+                              <Button variant="ghost" size="sm" className="text-red-500">
+                                Delete
+                              </Button>
+                              <Button variant="ghost" size="sm" className="text-blue-500">
+                                Edit
+                              </Button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
           </div>
         </main>
       </div>
