@@ -1,4 +1,5 @@
-import React from 'react';
+"use client"
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -30,7 +31,7 @@ import {
 
 // Main Dashboard Component
 const FranchiseDashboard = () => {
-  // Navigation menu items
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const menuItems = [
     { name: 'Home', icon: Home, active: true },
     { name: 'Stages & Checklist', icon: CheckSquare },
@@ -181,66 +182,96 @@ const FranchiseDashboard = () => {
 
   return (
     <div className="flex h-screen bg-gray-50">
-      {/* Sidebar Navigation */}
-      <div className="w-64 bg-teal-700 text-white">
-        <div className="p-4">
-          {/* Logo */}
-          <div className="flex items-center mb-8">
-            <div className="w-8 h-8 bg-white rounded mr-3 flex items-center justify-center">
-              <span className="text-teal-700 font-bold">⚡</span>
+      {/* Mobile Menu Button - Only visible on mobile */}
+      <div className="lg:hidden fixed top-4 left-4 z-50">
+        <Button
+          variant="outline" 
+          size="sm"
+          className="bg-white shadow-lg"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+        >
+          <div className="w-4 h-4 flex flex-col justify-center">
+            <div className="h-0.5 bg-gray-600 mb-1"></div>
+            <div className="h-0.5 bg-gray-600 mb-1"></div>
+            <div className="h-0.5 bg-gray-600"></div>
+          </div>
+        </Button>
+      </div>
+
+      {/* Sidebar Navigation - Responsive */}
+      <div className={`${
+        mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+      } lg:translate-x-0 fixed lg:relative inset-y-0 left-0 z-40 w-64 bg-teal-700 text-white transition-transform duration-300 ease-in-out lg:transition-none`}>
+        <div className="flex flex-col h-full">
+          <div className="p-4">
+            {/* Logo */}
+            <div className="flex items-center mb-8">
+              <div className="w-8 h-8 bg-white rounded mr-3 flex items-center justify-center">
+                <span className="text-teal-700 font-bold">⚡</span>
+              </div>
+              <span className="text-lg font-semibold">FrameTech</span>
             </div>
-            <span className="text-lg font-semibold">FrameTech</span>
+
+            {/* Navigation Menu */}
+            <nav className="space-y-2">
+              {menuItems.map((item, index) => {
+                const Icon = item.icon;
+                return (
+                  <div
+                    key={index}
+                    className={`flex items-center px-3 py-2 rounded-lg cursor-pointer transition-colors ${
+                      item.active 
+                        ? 'bg-teal-600 text-white' 
+                        : 'text-teal-100 hover:bg-teal-600'
+                    }`}
+                  >
+                    <Icon className="w-5 h-5 mr-3 flex-shrink-0" />
+                    <span className="flex-1 text-sm truncate">{item.name}</span>
+                    {item.badge && (
+                      <span className="bg-white text-teal-700 text-xs px-2 py-1 rounded-full flex-shrink-0">
+                        {item.badge}
+                      </span>
+                    )}
+                  </div>
+                );
+              })}
+            </nav>
           </div>
 
-          {/* Navigation Menu */}
-          <nav className="space-y-2">
-            {menuItems.map((item, index) => {
-              const Icon = item.icon;
-              return (
-                <div
-                  key={index}
-                  className={`flex items-center px-3 py-2 rounded-lg cursor-pointer transition-colors ${
-                    item.active 
-                      ? 'bg-teal-600 text-white' 
-                      : 'text-teal-100 hover:bg-teal-600'
-                  }`}
-                >
-                  <Icon className="w-5 h-5 mr-3" />
-                  <span className="flex-1 text-sm">{item.name}</span>
-                  {item.badge && (
-                    <span className="bg-white text-teal-700 text-xs px-2 py-1 rounded-full">
-                      {item.badge}
-                    </span>
-                  )}
-                </div>
-              );
-            })}
-          </nav>
-        </div>
-
-        {/* Logout at bottom */}
-        <div className="absolute bottom-4 left-4 right-4">
-          <div className="flex items-center px-3 py-2 text-teal-100 hover:bg-teal-600 rounded-lg cursor-pointer transition-colors">
-            <LogOut className="w-5 h-5 mr-3" />
-            <span className="text-sm">Logout</span>
+          {/* Logout at bottom */}
+          <div className="mt-auto p-4">
+            <div className="flex items-center px-3 py-2 text-teal-100 hover:bg-teal-600 rounded-lg cursor-pointer transition-colors">
+              <LogOut className="w-5 h-5 mr-3 flex-shrink-0" />
+              <span className="text-sm">Logout</span>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col">
-        {/* Header */}
-        <header className="bg-white border-b px-6 py-4">
+      {/* Mobile Overlay */}
+      {mobileMenuOpen && (
+        <div 
+          className="lg:hidden fixed inset-0 z-30 bg-black bg-opacity-50"
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
+
+      {/* Main Content Area - Responsive */}
+      <div className="flex flex-col flex-1 min-w-0">
+        {/* Header - Responsive */}
+        <header className="bg-white border-b px-4 sm:px-6 py-4">
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-semibold text-gray-900">
-              Financials & Targets
-            </h1>
-            <div className="flex items-center space-x-3">
-              <Badge className="bg-red-500 text-white px-3 py-1">
+            <div className="flex items-center min-w-0">
+              <h1 className="text-lg sm:text-xl lg:text-2xl font-semibold text-gray-900 truncate">
+                Financials & Targets
+              </h1>
+            </div>
+            <div className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
+              <Badge className="bg-red-500 text-white px-2 sm:px-3 py-1 text-xs sm:text-sm">
                 Adityaa Dey
               </Badge>
-              <Avatar className="w-8 h-8">
-                <AvatarFallback>A</AvatarFallback>
+              <Avatar className="w-6 h-6 sm:w-8 sm:h-8">
+                <AvatarFallback className="text-xs">A</AvatarFallback>
               </Avatar>
             </div>
           </div>
@@ -458,110 +489,127 @@ const FranchiseDashboard = () => {
               </div>
             </div>
 
-            {/* My Uploads Section - Simple card with no pink border */}
+            {/* My Uploads Section - Fully Responsive */}
             <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between mb-2">
-                  <h2 className="text-xl font-semibold text-gray-900">My Uploads</h2>
-                  <Button variant="ghost" size="sm">
+              <CardContent className="p-3 sm:p-4 lg:p-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 lg:mb-6">
+                  <div className="mb-3 sm:mb-0">
+                    <h2 className="text-lg lg:text-xl font-semibold text-gray-900">My Uploads</h2>
+                    <p className="text-xs lg:text-sm text-gray-600 mt-1">Documents that are uploaded by you.</p>
+                  </div>
+                  <Button variant="ghost" size="sm" className="self-start sm:self-auto">
                     <MoreHorizontal className="w-4 h-4" />
                   </Button>
                 </div>
-                <p className="text-sm text-gray-600 mb-6">Documents that are uploaded by you.</p>
 
-                {/* Search and Filters */}
-                <div className="flex items-center space-x-4 mb-6">
-                  <div className="relative flex-1 max-w-sm">
+                {/* Search and Filters - Responsive */}
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-4 mb-4 lg:mb-6">
+                  <div className="relative flex-1 sm:max-w-sm">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-                    <Input placeholder="Search here..." className="pl-9" />
+                    <Input placeholder="Search here..." className="pl-9 text-sm" />
                   </div>
-                  <Button variant="outline">
+                  <Button variant="outline" className="flex items-center justify-center">
                     <Filter className="w-4 h-4 mr-2" />
                     Filters
                   </Button>
                 </div>
 
-                {/* Documents Table */}
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="border-b">
-                        <th className="text-left py-3 text-xs font-medium text-gray-500 uppercase w-8">
-                          {/* Checkbox column */}
-                        </th>
-                        <th className="text-left py-3 text-xs font-medium text-gray-500 uppercase">
-                          Document Name
-                        </th>
-                        <th className="text-left py-3 text-xs font-medium text-gray-500 uppercase">
-                          Document Type
-                        </th>
-                        <th className="text-left py-3 text-xs font-medium text-gray-500 uppercase">
-                          AI App Inclusion
-                        </th>
-                        <th className="text-left py-3 text-xs font-medium text-gray-500 uppercase">
-                          Dashboard Inclusion
-                        </th>
-                        <th className="text-left py-3 text-xs font-medium text-gray-500 uppercase">
-                          Stage Access
-                        </th>
-                        <th className="text-left py-3 text-xs font-medium text-gray-500 uppercase">
-                          Actions
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {documents.map((doc) => (
-                        <tr key={doc.id} className="border-b hover:bg-gray-50">
-                          <td className="py-4">
+                {/* Documents Table - Mobile Responsive */}
+                <div className="overflow-x-auto -mx-3 sm:mx-0">
+                  <div className="min-w-full inline-block align-middle px-3 sm:px-0">
+                    <table className="min-w-full divide-y divide-gray-200">
+                      <thead className="bg-gray-50">
+                        <tr>
+                          <th className="px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             <input type="checkbox" className="w-4 h-4 text-blue-600 rounded border-gray-300" />
-                          </td>
-                          <td className="py-4">
-                            <div className="flex items-center space-x-3">
-                              <FileTypeIcon type={doc.type} />
-                              <div>
-                                <p className="text-sm font-medium text-gray-900">{doc.name}</p>
-                                <p className="text-xs text-gray-500">{doc.size}</p>
-                              </div>
-                            </div>
-                          </td>
-                          <td className="py-4">
-                            <Badge className={`${doc.categoryColor} text-white text-xs`}>
-                              {doc.category}
-                            </Badge>
-                          </td>
-                          <td className="py-4">
-                            <Switch checked={doc.aiInclusion} />
-                          </td>
-                          <td className="py-4">
-                            <Switch checked={doc.dashboardInclusion} />
-                          </td>
-                          <td className="py-4">
-                            <Select defaultValue={doc.stageAccess.toLowerCase()}>
-                              <SelectTrigger className="w-32">
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="full">Full</SelectItem>
-                                <SelectItem value="onboarding">Onboarding</SelectItem>
-                                <SelectItem value="franchisee">Franchisee</SelectItem>
-                                <SelectItem value="prospect">Prospect</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </td>
-                          <td className="py-4">
-                            <div className="flex space-x-2">
-                              <Button variant="ghost" size="sm" className="text-red-500">
-                                Delete
-                              </Button>
-                              <Button variant="ghost" size="sm" className="text-blue-500">
-                                Edit
-                              </Button>
-                            </div>
-                          </td>
+                          </th>
+                          <th className="px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[200px]">
+                            Document Name
+                          </th>
+                          <th className="px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Type
+                          </th>
+                          <th className="hidden sm:table-cell px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            AI App
+                          </th>
+                          <th className="hidden md:table-cell px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Dashboard
+                          </th>
+                          <th className="hidden lg:table-cell px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Stage Access
+                          </th>
+                          <th className="px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Actions
+                          </th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody className="bg-white divide-y divide-gray-200">
+                        {documents.map((doc) => (
+                          <tr key={doc.id} className="hover:bg-gray-50">
+                            <td className="px-2 sm:px-4 py-4 whitespace-nowrap">
+                              <input type="checkbox" className="w-4 h-4 text-blue-600 rounded border-gray-300" />
+                            </td>
+                            <td className="px-2 sm:px-4 py-4">
+                              <div className="flex items-center space-x-3">
+                                <FileTypeIcon type={doc.type} />
+                                <div className="min-w-0 flex-1">
+                                  <p className="text-sm font-medium text-gray-900 truncate">{doc.name}</p>
+                                  <p className="text-xs text-gray-500">{doc.size}</p>
+                                  {/* Mobile: Show additional info */}
+                                  <div className="sm:hidden mt-1 space-y-1">
+                                    <div className="flex items-center space-x-2">
+                                      <Badge className={`${doc.categoryColor} text-white text-xs`}>
+                                        {doc.category}
+                                      </Badge>
+                                    </div>
+                                    <div className="flex items-center space-x-3 text-xs text-gray-500">
+                                      <span>AI: {doc.aiInclusion ? 'Yes' : 'No'}</span>
+                                      <span>Dashboard: {doc.dashboardInclusion ? 'Yes' : 'No'}</span>
+                                      <span>Access: {doc.stageAccess}</span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </td>
+                            <td className="px-2 sm:px-4 py-4 whitespace-nowrap">
+                              <Badge className={`${doc.categoryColor} text-white text-xs`}>
+                                {doc.category}
+                              </Badge>
+                            </td>
+                            <td className="hidden sm:table-cell px-2 sm:px-4 py-4 whitespace-nowrap">
+                              <Switch checked={doc.aiInclusion} />
+                            </td>
+                            <td className="hidden md:table-cell px-2 sm:px-4 py-4 whitespace-nowrap">
+                              <Switch checked={doc.dashboardInclusion} />
+                            </td>
+                            <td className="hidden lg:table-cell px-2 sm:px-4 py-4 whitespace-nowrap">
+                              <Select defaultValue={doc.stageAccess.toLowerCase()}>
+                                <SelectTrigger className="w-32">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="full">Full</SelectItem>
+                                  <SelectItem value="onboarding">Onboarding</SelectItem>
+                                  <SelectItem value="franchisee">Franchisee</SelectItem>
+                                  <SelectItem value="prospect">Prospect</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </td>
+                            <td className="px-2 sm:px-4 py-4 whitespace-nowrap">
+                              <div className="flex flex-col sm:flex-row space-y-1 sm:space-y-0 sm:space-x-2">
+                                <Button variant="ghost" size="sm" className="text-red-500 text-xs px-2 py-1">
+                                  Delete
+                                </Button>
+                                <Button variant="ghost" size="sm" className="text-blue-500 text-xs px-2 py-1">
+                                  Edit
+                                </Button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </CardContent>
             </Card>
